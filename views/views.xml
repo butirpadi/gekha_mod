@@ -1,0 +1,59 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="gekha_mod.list">
+      <field name="name">gekha_mod list</field>
+      <field name="model">gekha_mod.gekha_mod</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="gekha_mod.action_window">
+      <field name="name">gekha_mod window</field>
+      <field name="res_model">gekha_mod.gekha_mod</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="gekha_mod.action_server">
+      <field name="name">gekha_mod server</field>
+      <field name="model_id" ref="model_gekha_mod_gekha_mod"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="gekha_mod" id="gekha_mod.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="gekha_mod.menu_1" parent="gekha_mod.menu_root"/>
+    <menuitem name="Menu 2" id="gekha_mod.menu_2" parent="gekha_mod.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="gekha_mod.menu_1_list" parent="gekha_mod.menu_1"
+              action="gekha_mod.action_window"/>
+    <menuitem name="Server to list" id="gekha_mod" parent="gekha_mod.menu_2"
+              action="gekha_mod.action_server"/>
+    -->
+  </data>
+</odoo>

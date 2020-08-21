@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+
+        <!-- disable default sales report on menu -->
+        <report 
+            id="sale.report_sale_order"
+            string="Quotation / Order"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="sale.report_saleorder" 
+            name="sale.report_saleorder" 
+            menu="False"
+        />
+
+        <!-- Report "Human readable name" document template -->
+        <record id="gekha_sales_order_report" model="ir.ui.view">
+            <field name="name">Gekha Sales Order Report</field>
+            <field name="model">sale.order</field>
+            <field name="type">qweb</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <t t-name="gekha_sales_order_report">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <h2>Report title</h2>
+                            <p>This object's name is <span t-field="o.name"/>
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <!-- Report action to show: "Human readable name" -->
+        <record id="gekha_sales_order_report_action" model="ir.actions.report.xml">
+            <field name="name">Gekha Sales Order Report Action</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gekha_sales_order_report</field>
+            <field name="attachment_use" eval="False" />
+            <field name="attachment">(object.name+'.pdf')</field>
+            <field name="paperformat_id" ref="gekha_report_a4" />
+        </record>
+
+        <!-- Button to print the report: "Human readable name" -->
+        <!-- <record id="model_values" model="ir.values">
+            <field name="name">Human readable name</field>
+            <field name="model_id" ref="module.model_model" />
+            <field name="model">sale.order</field>
+            <field name="value" eval="'ir.actions.report.xml,' +str(ref('action_report_model'))" />
+            <field name="key">action</field>
+            <field name="key2">client_print_multi</field>
+        </record> -->
+
+    </data>
+</odoo>
