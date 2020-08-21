@@ -27,6 +27,7 @@
         'reports/report_format.xml',
         'reports/gekha_sales_report.xml',
         'views/gekha_view_order_form.xml',
+        'views/res_company_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

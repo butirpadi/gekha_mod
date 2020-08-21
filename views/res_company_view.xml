@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <!-- primary|extension Inherited .:Form:. view for "model" -->
+        <record id="gekha_view_company_form" model="ir.ui.view">
+            <field name="name">gekha.view.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="type">form</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="report_setting" string="Report Setting">
+                        <group>
+                            <group>
+                                <field name="report_validated_by" />
+                                <field name="report_verified_by" />
+                                <field name="report_approved_by" />
+                            </group>
+                            <group></group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
