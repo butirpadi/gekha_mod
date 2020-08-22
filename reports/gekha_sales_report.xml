@@ -326,27 +326,6 @@
             </t>
         </template>
 
-        <!-- Report "Human readable name" document template -->
-        <!-- <record id="gekha_sales_order_report" model="ir.ui.view">
-            <field name="name">Gekha Sales Order Report</field>
-            <field name="model">sale.order</field>
-            <field name="type">qweb</field>
-            <field name="mode">primary</field>
-            <field name="priority" eval="16" />
-            <field name="active" eval="True" />
-            <field name="arch" type="xml">
-                <t t-name="gekha_mod.gekha_sales_order_report">
-                    <t t-call="report.external_layout">
-                        <div class="page">
-                            <h2>Report title</h2>
-                            <p>This object's name is <span t-field="o.name"/>
-                            </p>
-                        </div>
-                    </t>
-                </t>
-            </field>
-        </record> -->
-
         <!-- Report action to show: "Human readable name" -->
         <record id="gekha_sales_order_report_action" model="ir.actions.report.xml">
             <field name="name">Gekha Sales Order Report Action</field>

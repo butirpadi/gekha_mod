@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+
+        <!-- primary|extension Inherited .:Form:. view for "model" -->
+        <record id="gekha_view_picking_form" model="ir.ui.view">
+            <field name="name">gekha.view.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="type">form</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="vendor_reference" />
+                </xpath>
+                <xpath expr="//button[@name='do_print_picking']" position="replace" />
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
