@@ -6,7 +6,7 @@
 
         <template id="gekha_sales_order_report_template">
             <t t-foreach="docs" t-as="doc">
-                <t t-call="report.external_layout">
+                <!-- <t t-call="report.external_layout"> -->
                     <div class="page" style="font-size:10pt;">
                         <style type="text/css">
                             table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
@@ -322,7 +322,7 @@
                             <i t-field="doc.create_date" />
                         </div>
                     </div>
-                </t>
+                <!-- </t> -->
             </t>
         </template>
 
