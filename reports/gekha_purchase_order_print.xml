@@ -8,9 +8,9 @@
 
         <template id="gekha_purchase_order_report_template">
             <t t-foreach="docs" t-as="doc">
-                <!-- <t t-call="report.external_layout"> -->
-                <div class="page" style="font-size:10pt;">
-                    <style type="text/css">
+                <t t-call="report.external_layout">
+                    <div class="page" style="font-size:10pt;">
+                        <style type="text/css">
                             table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
                                 border: none !important;
                             }
@@ -18,264 +18,154 @@
                                 padding:0;
                                 margin:0;
                             }
-                    </style>
-                    <div class="row">
-                        <div class="col-xs-2">
-                            <img t-if="user.company_id.logo" t-att-src="'data:image/png;base64,%s' % user.company_id.logo" style="max-height: 45px;"/>
-                        </div>
-                        <div class="col-xs-8 text-center">
-                            <h4>
-                                <strong t-field="user.company_id.name" />
-                            </h4>
-                            <span t-field="user.company_id.street" />
-                            <br/>
-                            <span t-field="user.company_id.city" />
-                            <span>, </span>
-                            <span t-field="user.company_id.state_id" />
-                            <span>, Telp. </span>
-                            <span t-field="user.company_id.phone" />
-                        </div>
-                        <div class="col-xs-2">
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <h3>PURCHASE ORDER</h3>
-                        </div>
-                        <div class="col-xs-6">
-                            <table class="table table-condensed borderless table-small">
-                                <tbody>
-                                    <tr>
-                                        <td class="col-xs-4">
-                                            <strong>Order #:</strong>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.name" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Date Order:</strong>
-                                        </td>
-                                        <td>
-                                            <span t-field="doc.date_order"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <br/>
-                    <![CDATA[&nbsp;]]>
-
-                    <!-- partner information -->
-
-                    <div class="text-center">
-
-                        <table class="table borderless table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td class="col-xs-5">
-                                        <strong>Vendor:</strong>
-                                        <div t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                                        <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/>
-                                        </p>
-                                    </td>
-                                    <td class="col-xs-2"></td>
-                                    <td class="col-xs-5">
-                                        <strong>Ship to:</strong>
-                                        <div t-if="doc.dest_address_id">
-                                            <div t-field="doc.dest_address_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                                        </div>
-
-                                        <div t-if="not doc.dest_address_id and doc.picking_type_id and doc.picking_type_id.warehouse_id">
-                                            <span t-field="doc.picking_type_id.warehouse_id.name"/>
-                                            <div t-field="doc.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <br/>
-
-                        <!-- Report Content -->
-
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <strong>Description</strong>
-                                    </th>
-                                    <th>
-                                        <strong>Taxes</strong>
-                                    </th>
-                                    <th class="text-center">
-                                        <strong>Date Req.</strong>
-                                    </th>
-                                    <th class="text-right">
-                                        <strong>Qty</strong>
-                                    </th>
-                                    <th class="text-right">
-                                        <strong>Unit Price</strong>
-                                    </th>
-                                    <th class="text-right">
-                                        <strong>Net Price</strong>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="doc.order_line" t-as="line">
-                                    <td>
-                                        <span t-field="line.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
-                                    </td>
-                                    <td class="text-center">
-                                        <span t-field="line.date_planned"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="line.product_qty"/>
-                                        <span t-field="line.product_uom.name" groups="product.group_uom"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="line.price_unit"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                        </style>
                         <div class="row">
-                            <div class="col-xs-4 pull-right">
-                                <table class="table table-condensed">
-                                    <tr class="border-black">
-                                        <td>
-                                            <strong>Total Without Taxes</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Taxes</td>
-                                        <td class="text-right">
-                                            <span t-field="doc.amount_tax" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-black">
-                                        <td>
-                                            <strong>Total</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                        </td>
-                                    </tr>
+                            <div class="col-xs-6">
+                                <h3>PURCHASE ORDER</h3>
+                            </div>
+                            <div class="col-xs-6">
+                                <table class="table table-condensed borderless table-small">
+                                    <tbody>
+                                        <tr>
+                                            <td class="col-xs-4">
+                                                <strong>Order #:</strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Date Order:</strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.date_order"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <p t-field="doc.notes"/>
-                        <div class="oe_structure"/>
-
-                        <!-- Signature -->
-
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
                         <br/>
                         <![CDATA[&nbsp;]]>
 
-                        <div class="row">
-                            <div class="col-xs-3 text-center">
-                                <p>Prepared by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.name" />
-                                </b>
+                        <!-- partner information -->
+
+                        <div class="text-center">
+
+                            <table class="table borderless table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-xs-5">
+                                            <strong>Vendor:</strong>
+                                            <div t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                            <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/>
+                                            </p>
+                                        </td>
+                                        <td class="col-xs-2"></td>
+                                        <td class="col-xs-5">
+                                            <strong>Ship to:</strong>
+                                            <div t-if="doc.dest_address_id">
+                                                <div t-field="doc.dest_address_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                            </div>
+
+                                            <div t-if="not doc.dest_address_id and doc.picking_type_id and doc.picking_type_id.warehouse_id">
+                                                <span t-field="doc.picking_type_id.warehouse_id.name"/>
+                                                <div t-field="doc.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <br/>
+
+                            <!-- Report Content -->
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Taxes</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Date Req.</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Qty</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Unit Price</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Net Price</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.order_line" t-as="line">
+                                        <td>
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.date_planned"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.product_qty"/>
+                                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price_unit"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-xs-4 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td>
+                                                <strong>Total Without Taxes</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td class="text-right">
+                                                <span t-field="doc.amount_tax" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Validated by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_validated_by" />
-                                </b>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Verified by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_verified_by" />
 
-                                </b>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Approved by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_approved_by" />
+                            <p t-field="doc.notes"/>
+                            <div class="oe_structure"/>
 
-                                </b>
-                            </div>
                         </div>
-
                     </div>
-
-                    <!-- Footer -->
-                    <div class="text-center">
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <hr/>
-
-                        <span>Printed by </span>
-                        <i t-field="user.name" />
-                        <span> at </span>
-                        <i t-field="doc.create_date" />
-                    </div>
-                </div>
-                <!-- </t> -->
+                </t>
             </t>
         </template>
 

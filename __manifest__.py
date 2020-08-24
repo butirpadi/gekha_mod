@@ -25,8 +25,10 @@
     'data': [
         # 'security/ir.model.access.csv',
         'reports/report_format.xml',
+        'reports/report_layout.xml',
         'reports/gekha_sales_report.xml',
         'reports/gekha_purchase_order_print.xml',
+        'reports/stock_picking_report.xml',
         'reports/stock_picking_report.xml',
         'views/gekha_view_order_form.xml',
         'views/purchase_order_form.xml',

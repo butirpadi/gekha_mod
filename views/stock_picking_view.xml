@@ -13,8 +13,11 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="vendor_reference" />
                 </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="before">
+                    <button name="%(gekha_mod.gekha_delivery_slip_report_action)d" type="action" string="Print" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}" />
+                </xpath>
                 <xpath expr="//button[@name='do_print_picking']" position="replace" />
-
+                    <button name="%(stock.action_report_delivery)d"  states="done" position="replace" />
             </field>
         </record>
 

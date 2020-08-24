@@ -6,7 +6,7 @@
 
         <template id="gekha_sales_order_report_template">
             <t t-foreach="docs" t-as="doc">
-                <!-- <t t-call="report.external_layout"> -->
+                <t t-call="report.external_layout">
                 <div class="page" style="font-size:10pt;">
                     <style type="text/css">
                             table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
@@ -17,27 +17,6 @@
                                 margin:0;
                             }
                     </style>
-                    <div class="row">
-                        <div class="col-xs-2">
-                            <img t-if="user.company_id.logo" t-att-src="'data:image/png;base64,%s' % user.company_id.logo" style="max-height: 45px;"/>
-                        </div>
-                        <div class="col-xs-8 text-center">
-                            <h4>
-                                <strong t-field="user.company_id.name" />
-                            </h4>
-                            <span t-field="user.company_id.street" />
-                            <br/>
-                            <span t-field="user.company_id.city" />
-                            <span>, </span>
-                            <span t-field="user.company_id.state_id" />
-                            <span>, Telp. </span>
-                            <span t-field="user.company_id.phone" />
-                        </div>
-                        <div class="col-xs-2">
-                        </div>
-                    </div>
-
-                    <hr/>
 
                     <div class="row">
                         <div class="col-xs-6">
@@ -230,99 +209,10 @@
                         <div class="oe_structure"/>
                     </div>
 
-                    <!-- Signature -->
-                    <div class="text-center">
+                 
 
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-
-                        <div class="row">
-                            <div class="col-xs-3 text-center">
-                                <p>Prepared by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.name" />
-                                </b>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Validated by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_validated_by" />
-                                </b>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Verified by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_verified_by" />
-
-                                </b>
-                            </div>
-                            <div class="col-xs-3 text-center">
-                                <p>Approved by,</p>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <br/>
-                                <![CDATA[&nbsp;]]>
-                                <b>
-                                    <t t-esc="user.company_id.report_approved_by" />
-
-                                </b>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="text-center">
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <br/>
-                        <![CDATA[&nbsp;]]>
-                        <hr/>
-
-                        <span>Printed by </span>
-                        <i t-field="user.name" />
-                        <span> at </span>
-                        <i t-field="doc.create_date" />
-                    </div>
                 </div>
-                <!-- </t> -->
+                </t>
             </t>
         </template>
 

@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+        <template id="gekha_report_header" inherit_id="report.external_layout_header">
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <img t-if="user.company_id.logo" t-att-src="'data:image/png;base64,%s' % user.company_id.logo" style="max-height: 45px;"/>
+                        </div>
+                        <div class="col-xs-8 text-center">
+                            <h4>
+                                <strong t-field="user.company_id.name" />
+                            </h4>
+                            <span t-field="user.company_id.street" />
+                            <br/>
+                            <span t-field="user.company_id.city" />
+                            <span>, </span>
+                            <span t-field="user.company_id.state_id" />
+                            <span>, Telp. </span>
+                            <span t-field="user.company_id.phone" />
+                        </div>
+                        <div class="col-xs-2">
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="gekha_report_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <!-- Signature -->
+                    <div class="row">
+                        <div class="col-xs-3 text-center">
+                            <p>Prepared by,</p>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <b>
+                                <t t-esc="user.name" />
+                            </b>
+                        </div>
+                        <div class="col-xs-3 text-center">
+                            <p>Validated by,</p>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <b>
+                                <t t-esc="user.company_id.report_validated_by" />
+                            </b>
+                        </div>
+                        <div class="col-xs-3 text-center">
+                            <p>Verified by,</p>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <b>
+                                <t t-esc="user.company_id.report_verified_by" />
+                            </b>
+                        </div>
+                        <div class="col-xs-3 text-center">
+                            <p>Approved by,</p>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                            <b>
+                                <t t-esc="user.company_id.report_approved_by" />
+                            </b>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <![CDATA[&nbsp;]]>
+                    <br/>
+                    <![CDATA[&nbsp;]]>
+                    <br/>
+                    <![CDATA[&nbsp;]]>
+                    <hr/>
+
+                    <span>Printed by </span>
+                    <i t-field="user.name" />
+                    <span> at </span>
+                    <i t-field="doc.create_date" />
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
