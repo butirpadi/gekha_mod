@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','purchase','sale','account'],
+    'depends': ['base','stock','purchase','sale','account','account_cancel'],
 
     # always loaded
     'data': [
@@ -30,10 +30,12 @@
         'reports/gekha_purchase_order_print.xml',
         'reports/stock_picking_report.xml',
         'reports/stock_picking_report.xml',
+        'reports/account_invoice_report.xml',
         'views/gekha_view_order_form.xml',
         'views/purchase_order_form.xml',
         'views/res_company_view.xml',
         'views/stock_picking_view.xml',
+        'views/invoice_form_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

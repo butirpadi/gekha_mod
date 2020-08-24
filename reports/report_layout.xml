@@ -85,7 +85,7 @@
                     <span>Printed by </span>
                     <i t-field="user.name" />
                     <span> at </span>
-                    <i t-field="doc.create_date" />
+                    <i t-field="o.create_date" />
                 </div>
             </xpath>
         </template>
