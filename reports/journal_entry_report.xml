@@ -1,0 +1,160 @@
+<odoo>
+    <data>
+
+        <!-- disable default purchase report on menu -->
+
+        <template id="gekha_journal_entry_report_template">
+            <t t-call="report.html_container">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="report.internal_layout">
+                        <div class="page">
+                            <style type="text/css">
+                            table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
+                                border: none !important;
+                            }
+                            table.table-small tr td{
+                                padding:0;
+                                margin:0;
+                            }
+                            table tbody tr td.tr-first-line{
+                                border-top:thin solid darkgrey!important;
+                            }
+                            table tbody tr td.tr-last-line{
+                                border-top:thin solid black!important;
+                            }
+                            </style>
+
+                            <h2>Journal Entry</h2>
+
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <strong>Company:</strong>
+                                    <p t-esc="res_company.name"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <t t-if="doc.date_from">
+                                        <strong>Date from :</strong>
+                                        <span t-field="doc.date_from"/>
+                                        <br/>
+                                    </t>
+                                    <t t-if="doc.date_to">
+                                        <strong>Date to :</strong>
+                                        <span t-field="doc.date_to"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-3">
+                                    <t t-if="doc.journal_ids">
+                                        <strong>Journals :</strong>
+                                        <p>
+                                            <t t-foreach="doc.journal_ids" t-as="journal">
+                                                <span t-field="journal.code" />
+                                                <span>, </span>
+                                            </t>
+                                        </p>
+                                        <br/>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <table class="table table-condensed borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th class="text-center">JRNL</th>
+                                        <th>Ref</th>
+                                        <th colspan="2">Account</th>
+                                        <th class="text-right">Debit</th>
+                                        <th class="text-right">Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_debit" t-value="0" />
+                                    <t t-set="total_credit" t-value="0" />
+                                    <t t-set="precision" t-value="doc.get_digits('Product Price')"/>
+                                    <t t-foreach="doc.account_move_ids.sorted('date')" t-as="move">
+
+                                        <t t-set="total_debit" t-value="total_debit + sum(move.line_ids.mapped('debit'))" />
+                                        <t t-set="total_credit" t-value="total_credit + sum(move.line_ids.mapped('credit'))" />
+                                        <t t-set="is_first_line" t-value="True" />
+                                        <t t-foreach="move.line_ids.sorted('debit',reverse=True)" t-as="line">
+                                            <tr t-if="is_first_line">
+                                                <td class="tr-first-line" colspan="7"></td>
+                                            </tr>
+                                            <tr>
+                                                <td >
+                                                    <t t-if="is_first_line">
+                                                        <span t-field="move.date" />
+                                                    </t>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-if="is_first_line">
+                                                        <span t-field="move.journal_id.code" />
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <t t-if="is_first_line">
+                                                        <span t-if="move.ref" t-field="move.ref" />
+                                                        <span t-else="move.ref" t-field="move.name" />
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <t t-if="line.debit > 0">
+                                                        <span t-field="line.account_id.name" />
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <t t-if="line.credit > 0">
+                                                        <span t-field="line.account_id.name" />
+                                                    </t>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.debit > 0">
+                                                        <span t-esc="line.debit" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.credit > 0">
+                                                        <span t-esc="line.credit" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+
+                                            <t t-set="is_first_line" t-value="False" />
+                                        </t>
+                                    </t>
+
+
+                                    <tr>
+                                        <td class="tr-last-line" colspan="5"></td>
+                                        <td class="text-right tr-last-line">
+                                            <b t-esc="total_debit" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right tr-last-line">
+                                            <b t-esc="total_credit" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report action to show: "Human readable name" -->
+        <record id="gekha_journal_entry_report_action" model="ir.actions.report.xml">
+            <field name="name">Gekha Journal Entry Report Action</field>
+            <field name="model">journal.entry.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="menu">False</field>
+            <field name="report_name">gekha_mod.gekha_journal_entry_report_template</field>
+            <field name="attachment_use" eval="False" />
+            <field name="attachment">(object.name+'.pdf')</field>
+        </record>
+
+
+    </data>
+</odoo>

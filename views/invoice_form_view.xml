@@ -8,7 +8,7 @@
             <!-- Please veryfiy, that the following inherited view really sticks to the naming convention. -->
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="type">form</field>
-            <field name="priority" eval="16" />
+            <field name="priority" eval="20" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
                 <!-- <xpath expr="//button[@name='invoice_print']" position="before">
