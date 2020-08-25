@@ -21,7 +21,10 @@
                         </style>
                         <div class="row">
                             <div class="col-xs-6">
-                                <h3>PURCHASE ORDER</h3>
+                                <h2 t-if="doc.state != 'draft'">PURCHASE ORDER
+                                </h2>
+                                <h2 t-if="doc.state == 'draft'">Request for Quotation 
+                                </h2>
                             </div>
                             <div class="col-xs-6">
                                 <table class="table table-condensed borderless table-small">
