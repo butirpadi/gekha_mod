@@ -6,8 +6,8 @@ class JournalEntryReportWizard(models.TransientModel):
     _name = 'journal.entry.report.wizard'
 
     name = fields.Char(string='Name', default="New")
-    date_from = fields.Date(string='Start Date')
-    date_to = fields.Date(string='End Date')
+    date_from = fields.Date(string='Start Date', required=True, )
+    date_to = fields.Date(string='End Date', required=True, )
     journal_ids = fields.Many2many(
         comodel_name='account.journal',
         relation='wizard_journal_entries_report_journal_rel',
