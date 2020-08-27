@@ -2,28 +2,9 @@
     <data>
 
         <!-- disable default purchase report on menu -->
-        <report 
-            id="account.account_invoices"
-            model="account.invoice"
-            string="Invoices"
-            report_type="qweb-pdf"
-            name="account.report_invoice"
-            file="account.report_invoice"
-            attachment_use="True"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            menu="False"
-        />
+        <report id="account.account_invoices" model="account.invoice" string="Invoices" report_type="qweb-pdf" name="account.report_invoice" file="account.report_invoice" attachment_use="True" attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')" menu="False" />
 
-        <report 
-            id="account.account_invoice_action_report_duplicate"
-            model="account.invoice"
-            string="Duplicates"
-            report_type="qweb-pdf"
-            name="account.account_invoice_report_duplicate_main"
-            file="account.report_invoice_duplicate"
-            attachment_use="False"
-            menu="False"
-        />
+        <report id="account.account_invoice_action_report_duplicate" model="account.invoice" string="Duplicates" report_type="qweb-pdf" name="account.account_invoice_report_duplicate_main" file="account.report_invoice_duplicate" attachment_use="False" menu="False" />
 
         <template id="gekha_account_invoice_report_template">
             <t t-foreach="docs" t-as="doc">
@@ -37,88 +18,69 @@
                                 padding:0;
                                 margin:0;
                             }
+
+                            .invoice_tbody tr.border-black td{
+                                border-top:thin solid black!important;
+                            }
                         </style>
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-12 text-center">
                                 <h3>
-                                    <span t-if="doc.type == 'out_invoice' and (doc.state == 'open' or doc.state == 'paid')">INVOICE</span>
+                                    <span t-if="doc.type == 'out_invoice' and (doc.state == 'open' or doc.state == 'paid')">FAKTUR PENJUALAN</span>
                                     <span t-if="doc.type == 'out_invoice' and doc.state == 'proforma2'">PRO-FORMA</span>
-                                    <span t-if="doc.type == 'out_invoice' and doc.state == 'draft'">Draft Invoice</span>
+                                    <span t-if="doc.type == 'out_invoice' and doc.state == 'draft'">DRAFT FAKTUR PENJUALAN</span>
                                     <span t-if="doc.type == 'out_invoice' and doc.state == 'cancel'">Cancelled Invoice</span>
                                     <span t-if="doc.type == 'out_refund'">Refund</span>
                                     <span t-if="doc.type == 'in_refund'">Vendor Refund</span>
                                     <span t-if="doc.type == 'in_invoice'">Vendor Bill</span>
                                 </h3>
-                            </div>
-                            <div class="col-xs-6">
-                                <table class="table table-condensed borderless table-small">
-                                    <tbody>
-                                        <tr>
-                                            <td class="col-xs-4">
-                                                <strong>Number #:</strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="doc.number" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Invoice Date:</strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="doc.date_invoice"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <strong>Due Date:</strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="doc.date_due"/>
-                                            </td>
-                                        </tr>
-                                        <tr t-if="doc.origin">
-                                            <td>
-                                                <strong>Source:</strong>
-                                            </td>
-                                            <td>
-                                                <p t-field="doc.origin"/>
-                                            </td>
-                                        </tr>
-                                        <tr t-if="doc.partner_id.ref">
-                                            <td>
-                                                <strong>Customer Code:</strong>
-                                            </td>
-                                            <td>
-                                                <p t-field="doc.partner_id.ref"/>
-                                            </td>
-                                        </tr>
-                                        <tr t-if="doc.reference">
-                                            <td>
-                                                <strong>Customer Code:</strong>
-                                            </td>
-                                            <td>
-                                                <p t-field="doc.reference"/>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
+                                <br/>
+                                <br/>
                             </div>
                         </div>
 
-                        <table class="table borderless table-condensed">
+                        <table class="table table-condensed table-bordered">
                             <tbody>
                                 <tr>
-                                    <td class="col-xs-5">
-                                        <strong>Bill to:</strong>
+                                    <td class="col-xs-6">
+                                        <strong>Pelanggan :</strong>
+                                    </td>
+                                    <td class="col-xs-3">
+                                        <strong>Tanggal :</strong>
+                                    </td>
+                                    <td class="col-xs-3">
+                                        <strong>Nomor Faktur :</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3">
                                         <address t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                                         <span t-if="doc.partner_id.vat">TIN: <span t-field="doc.partner_id.vat"/>
                                         </span>
                                     </td>
-                                    <td class="col-xs-2"></td>
-                                    <td class="col-xs-5">
+                                    <td>
+                                        <span t-field="doc.date_invoice"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
 
+                                    <td>
+                                        <strong>Jatuh Tempo :</strong>
+                                    </td>
+                                    <td>
+                                        <strong>PO Pelanggan :</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <span t-field="doc.date_due"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.name"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -128,20 +90,24 @@
                         <!-- Is there a discount on at least one line? -->
                         <t t-set="display_discount" t-value="any([l.discount for l in doc.invoice_line_ids])"/>
 
-                        <table class="table table-condensed">
+                        <table class="table table-condensed table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Description</th>
+                                    <th class="text-right">Qty</th>
+                                    <th>Barang</th>
                                     <th class="hidden">Source Document</th>
-                                    <th class="text-right">Quantity</th>
-                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Harga Satuan</th>
                                     <th t-if="display_discount" class="text-right">Disc.(%)</th>
-                                    <th class="text-right">Taxes</th>
-                                    <th class="text-right">Tax Excluded Price</th>
+                                    <th class="text-right hidden">Taxes</th>
+                                    <th class="text-right">Total</th>
                                 </tr>
                             </thead>
                             <tbody class="invoice_tbody">
                                 <tr t-foreach="doc.invoice_line_ids" t-as="l">
+                                    <td class="text-right">
+                                        <span t-field="l.quantity"/>
+                                        <span t-field="l.uom_id" groups="product.group_uom"/>
+                                    </td>
                                     <td>
                                         <span t-field="l.name"/>
                                     </td>
@@ -149,31 +115,73 @@
                                         <span t-field="l.origin"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-field="l.quantity"/>
-                                        <span t-field="l.uom_id" groups="product.group_uom"/>
-                                    </td>
-                                    <td class="text-right">
                                         <span t-field="l.price_unit"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
                                         <span t-field="l.discount"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-right hidden">
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td colspan="4">
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td colspan="2"></td>
+                                    <td class="text-right">
+                                        <span>TOTAL HARGA</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td class="text-right">
+                                            <span class="hidden" t-esc="amount_by_group[0] if len(doc.tax_line_ids) > 1 else (doc.tax_line_ids.tax_id.description or doc.tax_line_ids.tax_id.name)"/>
+                                            <span>PPN 10%</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="amount_by_group[2]"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr >
+                                    <td colspan="2"></td>
+                                    <td class="text-right">
+                                        <strong>TOTAL HARGA + PPN 10%</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr >
+                                    <td colspan="7" class="text-right">
+                                        <span>Terbilang </span>
+                                        <i>#</i>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-xs-4 pull-right">
                                 <table class="table table-condensed">
                                     <tr class="border-black">
                                         <td>
-                                            <strong>Subtotal</strong>
+                                            <span>TOTAL HARGA</span>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="doc.amount_untaxed" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
@@ -182,7 +190,8 @@
                                     <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
                                         <tr>
                                             <td>
-                                                <span t-esc="amount_by_group[0] if len(doc.tax_line_ids) > 1 else (doc.tax_line_ids.tax_id.description or doc.tax_line_ids.tax_id.name)"/>
+                                                <span class="hidden" t-esc="amount_by_group[0] if len(doc.tax_line_ids) > 1 else (doc.tax_line_ids.tax_id.description or doc.tax_line_ids.tax_id.name)"/>
+                                                <span>PPN 10%</span>
                                             </td>
                                             <td class="text-right">
                                                 <span t-esc="amount_by_group[2]"/>
@@ -191,7 +200,7 @@
                                     </t>
                                     <tr class="border-black">
                                         <td>
-                                            <strong>Total</strong>
+                                            <strong>TOTAL HARGA + 10%</strong>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
@@ -199,10 +208,10 @@
                                     </tr>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- DO NOT REMOVE THIS TABLE. MANDATORY IN SOME COUNTRIES -->
-                        <div class="row" t-if="len(doc.tax_line_ids) > 0">
+                        <!-- <div class="row" t-if="len(doc.tax_line_ids) > 0">
                             <div class="col-xs-6">
                                 <table class="table table-condensed">
                                     <thead>
@@ -239,7 +248,28 @@
                         <p t-if="doc.fiscal_position_id.note">
                             <strong>Fiscal Position Remark:</strong>
                             <span t-field="doc.fiscal_position_id.note"/>
-                        </p>
+                        </p> -->
+
+                        <div class="row" style="font-size:10pt;" >
+                            <div class="col-xs-12" t-raw="user.company_id.invoice_footer_note" >
+                                
+                            </div>
+                            <div class="col-xs-6"></div>
+                            <div class="col-xs-6 text-center">
+                                <span>Hormat Kami,</span><br/>
+                                <span t-esc="user.company_id.name" />
+                                <br/>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <![CDATA[&nbsp;]]>
+                                <t t-esc="user.company_id.report_approved_by" />
+                            </div>
+                        </div>
+
                     </div>
 
 

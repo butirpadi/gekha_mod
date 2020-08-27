@@ -13,11 +13,14 @@
                     <page name="report_setting" string="Report Setting">
                         <group>
                             <group>
-                                <field name="report_validated_by" />
                                 <field name="report_verified_by" />
+                                <field name="report_validated_by" />
                                 <field name="report_approved_by" />
                             </group>
                             <group></group>
+                        </group>
+                        <group>
+                            <field name="invoice_footer_note" />
                         </group>
                     </page>
                 </xpath>

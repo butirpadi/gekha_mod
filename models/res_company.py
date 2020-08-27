@@ -7,3 +7,8 @@ class ResCompany(models.Model):
     report_validated_by = fields.Char(string='Validated by')
     report_verified_by = fields.Char(string='Verified by')
     report_approved_by = fields.Char(string='Approved by')
+    
+    invoice_footer_note = fields.Text(
+        string='Invoice Footer Note',
+    )
+    
