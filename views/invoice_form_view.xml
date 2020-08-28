@@ -11,9 +11,9 @@
             <field name="priority" eval="20" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='invoice_print']" position="before">
+                <!-- <xpath expr="//button[@name='invoice_print']" position="before">
                     <button name="%(gekha_mod.gekha_account_invoice_report_action)d" type="action" string="Print"/>
-                </xpath>
+                </xpath> -->
                 <xpath expr="//button[@name='action_invoice_sent']" states="draft" position="replace"/>
                 <xpath expr="//button[@name='action_invoice_sent']" states="open" position="replace"/>
                 <!-- <xpath expr="//button[@name='action_invoice_sent']" states="proforma" position="replace"/> -->
