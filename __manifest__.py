@@ -32,6 +32,7 @@
         'reports/stock_picking_report.xml',
         'reports/account_invoice_report.xml',
         'reports/journal_entry_report.xml',
+        'reports/ar_ap_report.xml',
         'views/gekha_view_order_form.xml',
         'views/purchase_order_form.xml',
         'views/res_company_view.xml',
@@ -39,6 +40,7 @@
         'views/invoice_form_view.xml',
         'views/view_account_journal_form.xml',
         'views/wizard_journal_entry_report.xml',
+        'views/wizard_ar_ap_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

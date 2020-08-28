@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="wizard_ar_ap_view" model="ir.ui.view">
+            <field name="name">wizard.ar.ap.view</field>
+            <field name="model">wizard.ar.ap</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="period_date"/>
+                            <field name="report_type"/>
+                        </group>
+                        <group>
+                            <field name="account_type" widget="radio" />
+                        </group>
+                    </group>
+                    <footer>
+                        <button type="object" name="process_wizard" string="Submit" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_ar_ap_action" model="ir.actions.act_window">
+            <field name="name">AR/AP Report</field>
+            <field name="res_model">wizard.ar.ap</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+            <field name="key2">client_action_multi</field>
+        </record>
+        <!-- 
+        <act_window id="wizard_ar_ap_action" res_model="wizard.ar.ap" name="AR/AP Report" src_model="account.invoice" view_mode="form" multi="True" target="new" key2="client_action_multi" /> -->
+
+        <menuitem id="wizard_ar_ap_menu" name="AR/AP Report" parent="account.menu_finance_legal_statement" action="wizard_ar_ap_action" groups="account.group_account_manager,account.group_account_user" sequence="99" />
+    </data>
+</odoo>

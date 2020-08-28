@@ -1,0 +1,361 @@
+<odoo>
+    <data>
+
+        <!-- disable default purchase report on menu -->
+
+        <template id="gekha_ar_ap_report_template">
+            <t t-call="report.html_container">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="report.internal_layout">
+                        <div class="page">
+                            <style type="text/css">
+                            table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
+                                border: none !important;
+                            }
+                            table.table-small tr td{
+                                padding:0;
+                                margin:0;
+                            }
+                            table tbody tr td.tr-first-line{
+                                border-top:thin solid darkgrey!important;
+                            }
+                            table tbody tr td.tr-last-line{
+                                border-top:thin solid black!important;
+                            }
+                            
+                                <t t-if="doc.report_type == 'detail'">
+                            table tbody tr.partner-row td{
+                                font-weight:bold;
+                            }                                
+                                </t>
+                            
+                            table tbody tr.footer-row td{
+                                font-weight:bold;
+                                border-top:thin solid black!important;
+                                border-bottom:thin solid black!important;
+                            }
+                            
+                            </style>
+
+                            <h2>AR/AP REPORT</h2>
+                            <br/>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <strong>Period Date :</strong>
+                                    <p>
+                                        <span t-field="doc.period_date"/>
+                                    </p>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Account Type :</strong>
+                                    <p>
+                                        <span t-field="doc.account_type"/>
+                                    </p>
+                                </div>
+                                <div class="col-xs-3">
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr  >
+                                        <th>Partners</th>
+                                        <th>PO Customer</th>
+                                        <th>Invoice</th>
+                                        <th>Order Date</th>
+                                        <th>Due Date</th>
+                                        <th class="text-right">Not Due</th>
+                                        <th class="text-right">0-30</th>
+                                        <th class="text-right">30-60</th>
+                                        <th class="text-right">60-90</th>
+                                        <th class="text-right">90-120</th>
+                                        <th class="text-right">+120</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="precision" t-value="doc.get_digits('Product Price')"/>
+                                    <t t-set="total_not_due" t-value="0"/>
+                                    <t t-set="total_0_30" t-value="0"/>
+                                    <t t-set="total_30_60" t-value="0"/>
+                                    <t t-set="total_60_90" t-value="0"/>
+                                    <t t-set="total_90_120" t-value="0"/>
+                                    <t t-set="total_120" t-value="0"/>
+
+                                    <t t-foreach="doc.partner_ids" t-as="partner">
+                                        <t t-set="partner_invoices" t-value="doc.invoice_ids.filtered(lambda x: x.partner_id.id == partner.id)" />
+
+                                        <t t-set="partner_not_due_inv" t-value="partner_invoices.filtered(lambda x: x.date_due &gt; doc.period_date)" />
+                                        <t t-set="partner_not_due_total" t-value="sum(partner_not_due_inv.mapped('residual'))" />
+
+                                        <t t-set="partner_0_30_invs" t-value="doc.get_0_to_30(partner.id)" />
+                                        <t t-set="partner_0_30_total" t-value="sum(partner_0_30_invs.mapped('residual'))" />
+
+                                        <t t-set="partner_30_60_invs" t-value="doc.get_30_to_60(partner.id)" />
+                                        <t t-set="partner_30_60_total" t-value="sum(partner_30_60_invs.mapped('residual'))" />
+
+                                        <t t-set="partner_60_90_invs" t-value="doc.get_60_to_90(partner.id)" />
+                                        <t t-set="partner_60_90_total" t-value="sum(partner_60_90_invs.mapped('residual'))" />
+
+                                        <t t-set="partner_90_120_invs" t-value="doc.get_90_to_120(partner.id)" />
+                                        <t t-set="partner_90_120_total" t-value="sum(partner_90_120_invs.mapped('residual'))" />
+
+                                        <t t-set="partner_120_invs" t-value="doc.get_120_more(partner.id)" />
+                                        <t t-set="partner_120_total" t-value="sum(partner_120_invs.mapped('residual'))" />
+
+                                        <!-- grand total calculate -->
+                                        <t t-set="total_not_due" t-value="total_not_due + partner_not_due_total"/>
+                                        <t t-set="total_0_30" t-value="total_0_30 + partner_0_30_total"/>
+                                        <t t-set="total_30_60" t-value="total_30_60 + partner_30_60_total"/>
+                                        <t t-set="total_60_90" t-value="total_60_90 + partner_60_90_total"/>
+                                        <t t-set="total_90_120" t-value="total_90_120 + partner_90_120_total"/>
+                                        <t t-set="total_120" t-value="total_120 + partner_120_total"/>
+
+                                        <tr class="border-black partner-row">
+                                            <td>
+                                                <span t-field="partner.name" />
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_not_due_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_0_30_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_30_60_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_60_90_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_90_120_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_120_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="partner_not_due_total + partner_0_30_total + partner_30_60_total + partner_60_90_total + partner_90_120_total + partner_120_total" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Detail Report -->
+
+
+                                        <t t-if="doc.report_type == 'detail'">
+                                            <t t-foreach="partner_not_due_inv" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-foreach="partner_0_30_invs" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-foreach="partner_30_60_invs" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-foreach="partner_60_90_invs" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-foreach="partner_90_120_invs" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-foreach="partner_120_invs" t-as="inv">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <span t-field="inv.name" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.so_date" />
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="inv.date_invoice" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right"></td>
+                                                    <td class="text-right">
+                                                        <span t-esc="inv.residual" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                            </t>
+                                        </t>
+
+                                    </t>
+
+                                    <!-- GRAND TOTAL -->
+                                    <tr class="footer-row">
+                                        <td colspan="5"></td>
+                                        <td class="text-right">
+                                            <span t-esc="total_not_due" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_0_30" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_30_60" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_60_90" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_90_120" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_120" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_not_due + total_0_30 + total_30_60 + total_60_90 + total_90_120 + total_120" t-options='{"widget": "float", "precision": precision}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report id="gekha_ar_ap_report_action" model="wizard.ar.ap" string="Gekha AR/AP" report_type="qweb-pdf" name="gekha_mod.gekha_ar_ap_report_template" file="gekha_mod.gekha_ar_ap_report_template" paperformat="gekha_report_a4_landscape" />
+
+    </data>
+</odoo>
