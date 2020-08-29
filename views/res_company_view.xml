@@ -22,6 +22,9 @@
                         <group>
                             <field name="invoice_footer_note" />
                         </group>
+                        <group>
+                            <field name="purchase_note" />
+                        </group>
                     </page>
                 </xpath>
 
