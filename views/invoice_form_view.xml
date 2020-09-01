@@ -18,6 +18,45 @@
                 <xpath expr="//button[@name='action_invoice_sent']" states="open" position="replace"/>
                 <!-- <xpath expr="//button[@name='action_invoice_sent']" states="proforma" position="replace"/> -->
                 <!-- <xpath expr="//button[@name='action_invoice_sent']" states="proforma2" position="replace"/> -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Faktur Pajak">
+                        <group>
+                            <group>
+                                <field name="no_faktur_pajak"/>
+                            </group>
+                            <group>
+                                <field name="tanggal_faktur_pajak" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="gekha_account_invoice_tree" model="ir.ui.view">
+            <field name="name">gekha.account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="priority">18</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='number']" position="after">
+                    <field name="no_faktur_pajak"/>
+                    <field name="tanggal_faktur_pajak" string ="Tgl. Fakt. Pajak" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="gekha_view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">gekha.view.account.invoice.filter</field>
+            <field name="model">account.invoice</field>
+            <field name="priority">18</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='late']" position="after">
+                    <separator/>
+                    <filter name="no_faktur_pajak" string="Tax Invoice Assigned" domain="[('no_faktur_pajak','!=','')]" />
+                    <filter name="no_faktur_pajak" string="Tax Invoice Not Assigned" domain="[('no_faktur_pajak','=',False)]" />
+                </xpath>
             </field>
         </record>
 

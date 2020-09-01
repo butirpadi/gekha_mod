@@ -8,6 +8,8 @@ class AccountInvoice(models.Model):
     satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh',
               'delapan', 'sembilan', 'sepuluh', 'sebelas']
     so_date = fields.Date(string='PO Date')
+    no_faktur_pajak = fields.Char(string='Faktur Pajak')
+    tanggal_faktur_pajak = fields.Date(string='Tanggal Faktur Pajak')
 
     def terbilang_(self, n):
         if n >= 0 and n <= 11:

@@ -1,0 +1,360 @@
+<odoo>
+    <data>
+
+        <!-- REPORT: "Human readable name"
+
+    - Module: module    Model: model
+    - Language field used to translate it: lang
+    - Report uses attachment: True
+    - Report paperformat: report.paperformat_euro
+    - View priority: 16    Active: True
+    - Action help: Something about Human readable name
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Report "Human readable name" document template -->
+        <template id="gekha_tax_report_template">
+            <t t-call="report.html_container">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+
+                <t t-foreach="docs" t-as="doc">
+                    <!-- <t t-call="report.external_layout"> -->
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                            </div>
+                            <div class="col-xs-2 col-xs-offset-2 text-center">
+                                <span t-esc="user.company_id.name"/>
+                            </div>
+                            <div class="col-xs-2 col-xs-offset-3 text-right">
+                                <ul class="list-inline">
+                                    <li>
+                                        <span class="page"/>
+                                    </li>
+                                    <li>/</li>
+                                    <li>
+                                        <span class="topage"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h2>Tax Report</h2>
+
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <b>Tax Type :</b>
+
+                                <t t-if="doc.tax_type == 'sale'">
+                                    <p>PPN Keluaran</p>
+                                </t>
+                                <t t-if="doc.tax_type == 'purchase'">
+                                    <p>PPN Masukan</p>
+                                </t>
+                                <t t-if="doc.tax_type == 'sale_purchase'">
+                                    <p>PPN Keluaran &amp; Masukan (Selisih)</p>
+                                </t>
+                            </div>
+                            <div class="col-xs-3">
+                                <t t-if="doc.date_from">
+                                    <strong>Date from :</strong>
+                                    <span t-field="doc.date_from"/>
+                                    <br/>
+                                </t>
+                                <t t-if="doc.date_to">
+                                    <strong>Date to :</strong>
+                                    <span t-field="doc.date_to"/>
+                                </t>
+                            </div>
+                            <div class="col-xs-3"></div>
+                            <div class="col-xs-3"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal</th>
+                                            <th>
+                                                <t t-if="doc.tax_type == 'sale'">
+                                                    Customer
+                                                </t>
+                                                <t t-if="doc.tax_type == 'purchase'">
+                                                    Vendor
+                                                </t>
+                                            </th>
+                                            <th>Barang</th>
+                                            <th class="text-right">Qty</th>
+                                            <th>NPWP</th>
+                                            <th>
+                                                <t t-if="doc.tax_type == 'sale'">
+                                                    No. Fakt. Penjualan
+                                                </t>
+                                                <t t-if="doc.tax_type == 'purchase'">
+                                                    No. Fakt. Pembelian
+                                                </t>
+                                            </th>
+                                            <th>No. Fakt. Pajak</th>
+                                            <th>Tgl. Fakt. Pajak</th>
+                                            <th class="text-right">DPP</th>
+                                            <th class="text-right">PPN10%</th>
+                                            <th class="text-right">DPP + PPN10%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="precision" t-value="doc.get_digits('Product Price')"/>
+                                        <t t-set="qty_precision" t-value="doc.get_digits('Product Unit of Measure')"/>
+                                        <t t-set="rownum" t-value="1" />
+
+                                        <t t-foreach="doc.report_line_ids" t-as="line">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <t t-esc="rownum" />
+                                                </td>
+                                                <td>
+                                                    <!-- <t t-field="line.date_invoice" t-options='{"format": "dd MMMM yyyy"}'/> -->
+                                                    <span t-field="line.date_invoice"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.partner_id.name" />
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.product_id.name" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-esc="line.quantity" t-options='{"widget": "float", "precision": qty_precision}'/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.partner_id.npwp" />
+                                                </td>
+                                                <td>
+                                                    <t t-if="doc.tax_type == 'sale'">
+                                                        <t t-esc="line.invoice_id.number" />
+                                                    </t>
+                                                    <t t-if="doc.tax_type == 'purchase'">
+                                                        <t t-esc="line.invoice_id.reference" />
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.invoice_id.no_faktur_pajak" />
+                                                </td>
+                                                <td>
+                                                    <t t-esc="line.invoice_id.tanggal_faktur_pajak" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="line.dpp" t-options='{"widget": "float", "precision": precision}'/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="line.ppn" t-options='{"widget": "float", "precision": precision}'/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="line.total" t-options='{"widget": "float", "precision": precision}'/>
+                                                </td>
+                                            </tr>
+
+                                            <t t-set="rownum" t-value="rownum+1" />
+                                        </t>
+
+                                        <!-- total row -->
+                                        <tr class="border-black">
+                                            <td colspan="9" class="text-center">
+                                                <b>TOTAL</b>
+                                            </td>
+                                            <td class="text-right">
+                                                <b t-esc="sum(doc.report_line_ids.mapped('dpp'))" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <b t-esc="sum(doc.report_line_ids.mapped('ppn'))" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <b t-esc="sum(doc.report_line_ids.mapped('total'))" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+
+
+        <template id="gekha_tax_difference_report_template">
+            <t t-call="report.html_container">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+
+                <t t-foreach="docs" t-as="doc">
+                    <!-- <t t-call="report.external_layout"> -->
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                            </div>
+                            <div class="col-xs-2 col-xs-offset-2 text-center">
+                                <span t-esc="user.company_id.name"/>
+                            </div>
+                            <div class="col-xs-2 col-xs-offset-3 text-right">
+                                <ul class="list-inline">
+                                    <li>
+                                        <span class="page"/>
+                                    </li>
+                                    <li>/</li>
+                                    <li>
+                                        <span class="topage"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h2>Tax Report</h2>
+
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <b>Tax Type :</b>
+
+                                <t t-if="doc.tax_type == 'sale_purchase'">
+                                    <p>PPN Keluaran &amp; Masukan (Selisih)</p>
+                                </t>
+                            </div>
+                            <div class="col-xs-3">
+                                <t t-if="doc.date_from">
+                                    <strong>Date from :</strong>
+                                    <span t-field="doc.date_from"/>
+                                    <br/>
+                                </t>
+                                <t t-if="doc.date_to">
+                                    <strong>Date to :</strong>
+                                    <span t-field="doc.date_to"/>
+                                </t>
+                            </div>
+                            <div class="col-xs-3"></div>
+                            <div class="col-xs-3"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:20px;">No</th>
+                                            <th class="text-right">PPN Keluaran</th>
+                                            <th class="text-center">
+                                                Customer/Vendor
+                                            </th>
+                                            <th class="text-center">No. Fakt. Pajak</th>
+                                            <th class="text-right">PPN Masukan</th>
+                                            <th class="text-right">Selisih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="precision" t-value="doc.get_digits('Product Price')"/>
+                                        <t t-set="qty_precision" t-value="doc.get_digits('Product Unit of Measure')"/>
+                                        <t t-set="rownum" t-value="1" />
+
+                                        <t t-foreach="doc.report_line_ids" t-as="line">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <t t-esc="rownum" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.tax_type == 'sale'">
+                                                        <span t-esc="line.ppn" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="line.partner_id.name" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-esc="line.invoice_id.no_faktur_pajak" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.tax_type == 'purchase'">
+                                                        <span t-esc="line.ppn" t-options='{"widget": "float", "precision": precision}'/>
+                                                    </t>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+
+                                            <t t-set="rownum" t-value="rownum+1" />
+                                        </t>
+
+                                        <!-- total row -->
+                                        <t t-set="total_keluaran" t-value="sum((doc.report_line_ids.filtered(lambda x:x.tax_type == 'sale')).mapped('ppn'))" />
+                                        <t t-set="total_masukan" t-value="sum((doc.report_line_ids.filtered(lambda x:x.tax_type == 'purchase')).mapped('ppn'))" />
+                                        <tr class="border-black">
+                                            <td></td>
+                                            <td class="text-right">
+                                                <b t-esc="total_keluaran" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <b t-esc="total_masukan" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <b t-esc="abs(total_keluaran - total_masukan)" t-options='{"widget": "float", "precision": precision}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+
+        <!-- Report "Human readable name" translate_doc template -->
+        <!-- <record id="view_model_qweb" model="ir.ui.view">
+            <field name="name">Human readable name</field>
+            <field name="model">model</field>
+            <field name="type">qweb</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <t t-name="module.view_model_qweb">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <t t-raw="translate_doc(doc_id, doc_model, 'lang', 'module.view_model_document_qweb')"/>
+                        </t>
+                    </t>
+                </t>
+            </field>
+        </record> -->
+
+        <!-- Report action to show: "Human readable name" -->
+        <report id="gekha_ppn_report_action" model="wizard.tax.report" string="Gekha Tax Report Action" report_type="qweb-pdf" name="gekha_mod.gekha_tax_report_template" file="gekha_mod.gekha_tax_report_template" paperformat="gekha_report_a4_landscape" />
+        <report id="gekha_ppn_difference_report_action" model="wizard.tax.report" string="Gekha Tax Report Action" report_type="qweb-pdf" name="gekha_mod.gekha_tax_difference_report_template" file="gekha_mod.gekha_tax_difference_report_template" paperformat="gekha_report_a4" />
+
+        <!-- <record id="gekha_tax_report_action" model="ir.actions.report.xml">
+            <field name="name">Tax Report</field>
+            <field name="model">wizard.tax.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gekha_mod.gekha_tax_report</field>
+            <field name="attachment_use" eval="False" />
+            <field name="attachment">(object.name+'.pdf')</field>
+            <field name="paperformat_id" ref="gekha_mod.gekha_report_a4_landscape" />
+        </record> -->
+
+        <!-- Button to print the report: "Human readable name" -->
+        <!-- <record id="wizard_tax_report_values" model="ir.values">
+            <field name="name">Tax Report</field>
+            <field name="model">wizard.tax.report</field>
+            <field name="value" eval="'ir.actions.report.xml,' +str(ref('gekha_tax_report_action'))" />
+            <field name="key">action</field>
+            <field name="key2">client_print_multi</field>
+        </record> -->
+
+    </data>
+</odoo>
