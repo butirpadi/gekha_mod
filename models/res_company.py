@@ -13,4 +13,5 @@ class ResCompany(models.Model):
     )
 
     purchase_note = fields.Text(string='Default Purchase Terms & Conditions')
+    kwitansi_logo = fields.Binary(string='Logo Kwitansi')
     

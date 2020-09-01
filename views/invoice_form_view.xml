@@ -11,6 +11,13 @@
             <field name="priority" eval="20" />
             <field name="active" eval="True" />
             <field name="arch" type="xml">
+                <xpath expr="//form/sheet/label" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_payments" class="oe_stat_button" icon="fa-money">
+                            <field name="payment_ids" widget="statinfo" string="Payments" help="Payment Received"/>
+                        </button>
+                    </div>
+                </xpath>
                 <!-- <xpath expr="//button[@name='invoice_print']" position="before">
                     <button name="%(gekha_mod.gekha_account_invoice_report_action)d" type="action" string="Print"/>
                 </xpath> -->
@@ -30,6 +37,8 @@
                         </group>
                     </page>
                 </xpath>
+
+
             </field>
         </record>
 

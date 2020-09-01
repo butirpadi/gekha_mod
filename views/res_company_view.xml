@@ -17,7 +17,9 @@
                                 <field name="report_validated_by" />
                                 <field name="report_approved_by" />
                             </group>
-                            <group></group>
+                            <group>
+                                <field name="kwitansi_logo" />
+                            </group>
                         </group>
                         <group>
                             <field name="invoice_footer_note" />

@@ -34,6 +34,7 @@
         'reports/journal_entry_report.xml',
         'reports/ar_ap_report.xml',
         'reports/gekha_tax_report.xml',
+        'reports/account_payment_receipt.xml',
         'views/gekha_view_order_form.xml',
         'views/purchase_order_form.xml',
         'views/res_company_view.xml',
@@ -45,6 +46,7 @@
         'views/wizard_journal_entry_report.xml',
         'views/wizard_ar_ap_view.xml',
         'views/wizard_tax_report.xml',
+        'views/account_payment_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

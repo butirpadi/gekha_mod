@@ -9,3 +9,4 @@ from . import purchase_order
 from . import wizard_tax_report
 from . import res_partner
 from . import wizard_tax_report_detail
+from . import account_payment

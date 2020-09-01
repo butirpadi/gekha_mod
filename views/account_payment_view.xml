@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+        <!-- Form view for "model" -->
+        <record id="gekha_account_view_account_payment_form" model="ir.ui.view">
+            <field name="name">gekha.account.view.account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="priority">18</field>
+            <field name="inherit_id" ref="account.view_account_payment_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='amount_div']/parent::group/parent::group" position="after">
+                    <group>
+                        <field name="receipt_note" />
+                    </group>
+                </xpath>
+                <xpath expr="//button[@name='cancel']" position="before">
+                    <button name="action_print_receipt" type="object" string="Print Receipt" attrs="{'invisible':[('payment_type', '!=', 'inbound'),('state','!=','draft')]}" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

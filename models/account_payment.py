@@ -2,14 +2,19 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
 
+    receipt_note = fields.Text(string='Receipt Note')
     satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh',
               'delapan', 'sembilan', 'sepuluh', 'sebelas']
-    so_date = fields.Date(string='PO Date')
-    no_faktur_pajak = fields.Char(string='Faktur Pajak')
-    tanggal_faktur_pajak = fields.Date(string='Tanggal Faktur Pajak')
+    terbilang = fields.Char(string='Terbilang', compute='_compute_terbilang', store=True)
+
+    @api.depends('state')
+    def _compute_terbilang(self):
+        for rec in self:
+            if rec.state == 'posted':
+                rec.terbilang = rec.get_terbilang(rec.amount)
 
     def terbilang_(self, n):
         if n >= 0 and n <= 11:
@@ -46,40 +51,7 @@ class AccountInvoice(models.Model):
         terbilang = ' '.join(t)
         return terbilang
 
-    @api.multi
-    def invoice_print(self):
-        """ Print the invoice and mark it as sent, so that we can see more
-            easily the next step of the workflow
-        """
-        self.ensure_one()
-        self.sent = True
-        # return self.env['report'].get_action(self, 'account.report_invoice')
-        return self.env['report'].get_action(self, 'gekha_mod.gekha_account_invoice_report_template')
-
-    @api.multi
-    def action_invoice_open(self):
-        result = super(AccountInvoice, self).action_invoice_open()
-
-        # get do_date
-        if self.type == 'out_invoice' and self.name:
-            origin_so = self.env['sale.order'].search(
-                [('client_order_ref', '=', self.name)])
-            self.so_date = origin_so.date_order
-
-        return result
-
-    def action_view_payments(self):
-
+    def action_print_receipt(self):
         action = self.env.ref(
-            'account.action_account_payments').read()[0]
-        action['domain'] = [('id', 'in', self.payment_ids.ids)]
+            'gekha_mod.gekha_account_payment_receipt_action').read()[0]
         return action
-
-        # return {
-        #     'name': 'Payments',
-        #     'type': 'ir.actions.act_window',
-        #     'view_type': 'tree',
-        #     'view_mode': 'tree,form',
-        #     'res_model': 'account.payment',
-        #     'domain': [('id', 'in', self.payment_ids.ids)],
-        # }

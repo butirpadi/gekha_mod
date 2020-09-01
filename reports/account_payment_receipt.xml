@@ -1,0 +1,98 @@
+<odoo>
+    <data>
+
+        <template id="gekha_payment_receipt_template">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page" style="border:thin solid black; padding:10px;">
+                    <style type="text/css">
+                            table.borderless, table.borderless thead tr th, table.borderless tbody tr td {
+                                border: none !important;
+                            }
+                            table.table-small tr td{
+                                padding:0;
+                                margin:0;
+                            }
+                    </style>
+
+                    <table class="table table-condensed borderless">
+                        <tbody>
+                            <tr>
+                                <td rowspan="9">
+                                    <img t-att-src="'data:image/png;base64,%s' % user.company_id.kwitansi_logo" style="max-width:1.5cm;" />
+                                </td>
+                                <td class="col-xs-1"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td class="col-xs-2">No.</td>
+                                <td>:</td>
+                                <td>
+                                    <span t-field="doc.name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td>Sudah diterima dari</td>
+                                <td>:</td>
+                                <td>
+                                    <span t-field="doc.partner_id.name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td>Banyaknya uang</td>
+                                <td>:</td>
+                                <td>
+                                    <span t-field="doc.terbilang" style="text-transform:capitalize;" />
+                                    <span t-if="doc.terbilang"> Rupiah</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td>Untuk pembayaran</td>
+                                <td>:</td>
+                                <td>
+                                    <span t-field="doc.receipt_note" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span t-field="user.company_id.state_id.name" />
+                                    <span>, </span>
+                                    <span t-field="doc.payment_date" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3" style="vertical-align:bottom;">
+                                    <b t-field="doc.amount" style="font-size:14pt;" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <report id="gekha_account_payment_receipt_action" model="account.payment" string="Payment Receipt" report_type="qweb-pdf" name="gekha_mod.gekha_payment_receipt_template" file="gekha_mod.gekha_payment_receipt_template" paperformat="gekha_report_a4_thin_border" />
+
+    </data>
+</odoo>
