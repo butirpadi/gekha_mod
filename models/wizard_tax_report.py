@@ -56,15 +56,6 @@ class WizardTaxReport(models.TransientModel):
             invoices = self.env['account.invoice'].search(
                 [('amount_tax', '>', 0), ('state', 'in', ['open', 'paid'])])
 
-        # # self.account_invoice_ids = invoices
-        # print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-        # if self.tax_type in ['sale', 'purchase']:
-        #     print('sale purchase tax')
-        #     pprint(invoices)
-        # else:
-        #     print('all tax')
-        # print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-
         if self.tax_type in ['sale', 'purchase']:
             report_detail = []
             for inv in invoices:
@@ -130,31 +121,6 @@ class WizardTaxReport(models.TransientModel):
                             'total': tax.base + tax.amount,
                         })
                     )
-
-            #     for line in inv.invoice_line_ids:
-            #         if default_tax.include_base_amount:
-            #             dpp = line.price_unit / \
-            #                 (default_tax.amount / 100 + 1)
-            #             total = line.price_unit
-            #             ppn = total - dpp
-            #         else:
-            #             dpp = line.price_unit
-            #             ppn = default_tax.amount / 100 * dpp
-            #             total = dpp+ppn
-
-            #         report_detail.append(
-            #             (0, False, {
-            #                 'tax_type': self.tax_type,
-            #                 'invoice_id': inv.id,
-            #                 'date_invoice': inv.date_invoice,
-            #                 'partner_id': inv.partner_id.id,
-            #                 'product_id': line.product_id.id,
-            #                 'quantity': line.quantity,
-            #                 'dpp': line.quantity * dpp,
-            #                 'ppn': line.quantity * ppn,
-            #                 'total': line.quantity * total,
-            #             })
-            #         )
 
             self.report_line_ids.unlink()
             self.report_line_ids = report_detail
