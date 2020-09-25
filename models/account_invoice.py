@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from num2words import num2words
 
 
 class AccountInvoice(models.Model):
@@ -36,13 +37,15 @@ class AccountInvoice(models.Model):
         return hasil
 
     def get_terbilang(self, bilangan):
-        num = abs(bilangan)
-        terbilang = ""
-        t = self.terbilang_(num)
-        while '' in t:
-            t.remove('')
-        terbilang = ' '.join(t)
-        return terbilang
+        # num = abs(bilangan)
+        # terbilang = ""
+        # t = self.terbilang_(num)
+        # while '' in t:
+        #     t.remove('')
+        # terbilang = ' '.join(t)
+        # return terbilang
+        res = num2words(bilangan, lang="id")
+        return res.replace("koma nol", "") + " "
 
     @api.multi
     def invoice_print(self):
