@@ -9,6 +9,8 @@ class AccountInvoice(models.Model):
     satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh',
               'delapan', 'sembilan', 'sepuluh', 'sebelas']
     so_date = fields.Date(string='PO Date')
+    no_faktur_pajak = fields.Char(string='Faktur Pajak')
+    tanggal_faktur_pajak = fields.Date(string='Tanggal Faktur Pajak')
 
     def terbilang_(self, n):
         if n >= 0 and n <= 11:
@@ -68,3 +70,19 @@ class AccountInvoice(models.Model):
             self.so_date = origin_so.date_order
 
         return result
+
+    def action_view_payments(self):
+
+        action = self.env.ref(
+            'account.action_account_payments').read()[0]
+        action['domain'] = [('id', 'in', self.payment_ids.ids)]
+        return action
+
+        # return {
+        #     'name': 'Payments',
+        #     'type': 'ir.actions.act_window',
+        #     'view_type': 'tree',
+        #     'view_mode': 'tree,form',
+        #     'res_model': 'account.payment',
+        #     'domain': [('id', 'in', self.payment_ids.ids)],
+        # }

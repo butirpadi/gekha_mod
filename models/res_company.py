@@ -11,4 +11,7 @@ class ResCompany(models.Model):
     invoice_footer_note = fields.Text(
         string='Invoice Footer Note',
     )
+
+    purchase_note = fields.Text(string='Default Purchase Terms & Conditions')
+    kwitansi_logo = fields.Binary(string='Logo Kwitansi')
     

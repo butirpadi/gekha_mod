@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="gekha_account_invoice_supplier_form">
+            <field name="name">gekha.account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="priority">18</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Faktur Pajak">
+                        <group>
+                            <group>
+                                <field name="no_faktur_pajak"/>
+                            </group>
+                            <group>
+                                <field name="tanggal_faktur_pajak" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_invoice_supplier_tree">
+            <field name="name">account.invoice.supplier.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="priority">18</field>
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="no_faktur_pajak"/>
+                    <field name="tanggal_faktur_pajak" string ="Tgl. Fakt. Pajak" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
