@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <record model="ir.ui.view" id="gekha_res_partner_form">
             <field name="name">gekha.res.partner.form</field>
             <field name="model">res.partner</field>
@@ -11,5 +12,19 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="gekha_account_view_partner_property_form">
+            <field name="name">gekha.account.view.partner.property.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='accounting_entries']/parent::group" position="after">
+                    <group string="Invoice Note">
+                        <field name="default_invoice_note"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

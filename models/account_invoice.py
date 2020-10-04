@@ -12,6 +12,11 @@ class AccountInvoice(models.Model):
     no_faktur_pajak = fields.Char(string='Faktur Pajak')
     tanggal_faktur_pajak = fields.Date(string='Tanggal Faktur Pajak')
 
+    @api.onchange('partner_id')
+    def _partner_id_onchange(self):
+        if self.partner_id.default_invoice_note:
+            self.comment = self.partner_id.default_invoice_note
+
     def terbilang_(self, n):
         if n >= 0 and n <= 11:
             hasil = [self.satuan[int(n)]]

@@ -257,9 +257,10 @@
                         </p> -->
 
                         <div class="row" style="font-size:10pt;">
-                            <div class="col-xs-12" t-raw="user.company_id.invoice_footer_note">
+                            
+                            <div t-if="doc.comment" class="col-xs-12" t-raw="doc.comment" />
+                            <div t-if="not doc.comment" class="col-xs-12" t-raw="user.company_id.invoice_footer_note"/>
 
-                            </div>
                             <div class="col-xs-6"></div>
                             <div class="col-xs-6 text-center">
                                 <b>Hormat Kami,</b>
