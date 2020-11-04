@@ -12,6 +12,16 @@ class AccountInvoice(models.Model):
     no_faktur_pajak = fields.Char(string='Faktur Pajak')
     tanggal_faktur_pajak = fields.Date(string='Tanggal Faktur Pajak')
 
+    @api.model
+    def create(self, values):
+        result =  super(AccountInvoice, self).create(values)
+        if result.partner_id.default_invoice_note:
+            result.write({
+                'comment' : result.partner_id.default_invoice_note
+            })
+        
+        return result    
+
     @api.onchange('partner_id')
     def _partner_id_onchange(self):
         if self.partner_id.default_invoice_note:
