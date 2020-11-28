@@ -186,8 +186,6 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-4"></div>
-                            <div class="col-xs-4"></div>
                             <div class="col-xs-4 text-center">
                                 <span t-field="user.company_id.state_id" />
                                 <span>, </span>
@@ -208,6 +206,8 @@
                                 <![CDATA[&nbsp;]]>
                                 <b t-esc="user.company_id.report_approved_by" />
                             </div>
+                            <div class="col-xs-4"></div>
+                            <div class="col-xs-4"></div>
                         </div>
 
                         <!-- <p t-field="doc.notes"/> -->
